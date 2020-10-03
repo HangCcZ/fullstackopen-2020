@@ -64,7 +64,6 @@ app.get('/info', (req, res) => {
     9: 'Sept',
     10: 'Oct',
     11: 'Nov',
-    12: 'Dec',
   };
   const nowDate = `${weekdays[today.getDay()]} 
                 ${months[today.getMonth() + 1]} 
