@@ -95,13 +95,15 @@ describe('verifying existence of properties', () => {
     expect(response.body[0].id).toBeDefined()
   })
 
-  test('vetify if likes property is missing from the request', () => {
+  test('vetify if likes property is missing from the request, the default value should be 0', async () => {
     const newBlog = {
       title: 'Third Story',
       author: 'Hang',
       url: 'google.com',
-      likes: 666,
     }
+
+    const postResponse = await api.post('/api/blogs').send(newBlog)
+    expect(postResponse.body.likes).toBe(0)
   })
 })
 
