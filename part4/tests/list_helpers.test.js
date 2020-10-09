@@ -123,8 +123,16 @@ describe('verifying HTTP POST', () => {
     const contents = postResponse.body.map((r) => r.title)
     expect(contents).toContain('Second Story')
   })
+
+  test('verifies that if the title and url properties are missing from request,backend respond 400 Bad request', async () => {
+    const newBlog = {
+      author: 'Hang',
+      likes: 666,
+    }
+    await api.post('/api/blogs').send(newBlog).expect(400)
+  })
 })
 
-afterAll(() => {
-  mongoose.connection.close()
+afterAll(async () => {
+  await mongoose.connection.close()
 })
