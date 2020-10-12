@@ -133,9 +133,8 @@ describe('verifying HTTP POST', () => {
   })
 })
 
-
-describe('deletion of a blog',()=>{
-  test('succeed with status code 204 if id is valid',async()=>{
+describe('deletion of a blog', () => {
+  test('succeed with status code 204 if id is valid', async () => {
     const blogAtStart = (await api.get('/api/blogs')).body
     const blogToDelete = blogAtStart[1]
 
@@ -143,30 +142,28 @@ describe('deletion of a blog',()=>{
 
     const blogsAtEnd = (await api.get('/api/blogs')).body
 
-    expect(blogsAtEnd).toHaveLength(blogAtStart.length-1)
+    expect(blogsAtEnd).toHaveLength(blogAtStart.length - 1)
 
-    const blogTitles = blogsAtEnd.map(b=>b.title)
+    const blogTitles = blogsAtEnd.map((b) => b.title)
     expect(blogTitles).not.toContain(blogToDelete.title)
   })
 })
 
-describe('update of a blog',()=>{
-  test('increase a blog likes count by one' ,async()=>{
+describe('update of a blog', () => {
+  test('increase a blog likes count by one', async () => {
     const blogAtStart = (await api.get('/api/blogs')).body
-    const blogToUpdate = blogAtStart[blogAtStart.length-1]
-  
+    const blogToUpdate = blogAtStart[blogAtStart.length - 1]
+
     const blog = {
-      title:blogToUpdate.title,
-      author:blogToUpdate.author,
-      url:blogToUpdate.url,
-      likes:blogToUpdate.likes+1
+      title: blogToUpdate.title,
+      author: blogToUpdate.author,
+      url: blogToUpdate.url,
+      likes: blogToUpdate.likes + 1,
     }
     const newBlog = await api.put(`/api/blogs/${blogToUpdate.id}`).send(blog)
-    expect(newBlog.body.likes).toBe(blogToUpdate.likes+1)
+    expect(newBlog.body.likes).toBe(blogToUpdate.likes + 1)
   })
 })
-
-
 
 afterAll(async () => {
   await mongoose.connection.close()
