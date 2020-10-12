@@ -108,20 +108,36 @@ describe('verifying existence of properties', () => {
 })
 
 describe('verifying HTTP POST', () => {
-  test('verify total number of blogs increased by one after POST', async () => {
+  test('success: verify total number of blogs increased by one after POST', async () => {
     const newBlog = {
-      title: 'Third Story',
+      title: 'New Third Story',
       author: 'Hang',
       url: 'google.com',
       likes: 666,
     }
 
-    await api.post('/api/blogs').send(newBlog)
+    await api
+      .post('/api/blogs')
+      .set(
+        'Authorization',
+        'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhbmciLCJpZCI6IjVmODQ4YzAzMjdkMzljMTkwNGY4OGFkOSIsImlhdCI6MTYwMjUyNjE1Mn0.t_7_Xo-ie1GNS7RPVaEq2sck3GCTHH-FyZGuy2ApjJM'
+      )
+      .send(newBlog)
 
     const postResponse = await api.get('/api/blogs')
-
     const contents = postResponse.body.map((r) => r.title)
-    expect(contents).toContain('Second Story')
+    expect(contents).toContain('New Third Story')
+  })
+
+  test('fail: test fail when token is not provided in the header', async () => {
+    const newBlog = {
+      title: 'New Third Story',
+      author: 'Hang',
+      url: 'google.com',
+      likes: 666,
+    }
+
+    await api.post('/api/blogs').send(newBlog).expect(401)
   })
 
   test('verifies that if the title and url properties are missing from request,backend respond 400 Bad request', async () => {
@@ -165,6 +181,7 @@ describe('update of a blog', () => {
   })
 })
 
-afterAll(async () => {
-  await mongoose.connection.close()
+afterAll((done) => {
+  mongoose.connection.close()
+  done()
 })
