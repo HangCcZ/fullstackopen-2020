@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, onClickLike }) => {
+const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const [showingDetail, setshowingDetail] = useState(false)
 
   const toggleView = () => {
@@ -7,7 +7,25 @@ const Blog = ({ blog, onClickLike }) => {
   }
 
   const onLikesClick = () => {
-    onClickLike(blog)
+    clickLike(blog)
+  }
+
+  const onRemoveClick = () => {
+    const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+    if (result) {
+      removeBlog(blog)
+    }
+  }
+
+  const showRemove = () => {
+    if (blog.user.id === user.id) {
+      return (
+        <div>
+          <button onClick={onRemoveClick}>remove</button>
+        </div>
+      )
+    }
+    return null
   }
 
   const blogDetail = () => {
@@ -24,6 +42,7 @@ const Blog = ({ blog, onClickLike }) => {
           <button onClick={onLikesClick}>like</button>
         </div>
         <div>{blog.author}</div>
+        {showRemove()}
       </>
     )
   }

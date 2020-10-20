@@ -31,7 +31,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      setUserBlog(user)
+      fetchBlogs()
     }
   }, [])
 
@@ -42,9 +42,9 @@ const App = () => {
     setBlogs([])
   }
 
-  const setUserBlog = async (user) => {
-    const allBlogsofUser = await blogService.getAllFromUser(user.id)
-    setBlogs(allBlogsofUser)
+  const fetchBlogs = async () => {
+    const allBlogs = await blogService.getAll()
+    setBlogs(allBlogs)
   }
 
   const handleLogin = async (event) => {
@@ -62,7 +62,7 @@ const App = () => {
       setUsername('')
       setPassword('')
 
-      setUserBlog(user)
+      fetchBlogs()
     } catch (exception) {
       setErrorMessage('Wong username or password')
       setTimeout(() => {
@@ -96,6 +96,18 @@ const App = () => {
       )
     } catch (exception) {
       setErrorMessage(`error updating the vlog`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    }
+  }
+
+  const removeBlog = async (blogObject) => {
+    try {
+      await blogService.deleteBlog(blogObject)
+      setBlogs(blogs.filter((blog) => blog.id !== blogObject.id))
+    } catch (exception) {
+      setErrorMessage(`error deleting the vlog, error: ${exception}`)
       setTimeout(() => {
         setErrorMessage(null)
       }, 3000)
@@ -143,9 +155,17 @@ const App = () => {
       </p>
 
       {blogForm()}
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} onClickLike={addLike} />
-      ))}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            clickLike={addLike}
+            removeBlog={removeBlog}
+            user={user}
+          />
+        ))}
     </div>
   )
 
