@@ -95,7 +95,7 @@ const App = () => {
         blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
       )
     } catch (exception) {
-      setErrorMessage(`error updating the vlog`)
+      setErrorMessage('error updating the vlog')
       setTimeout(() => {
         setErrorMessage(null)
       }, 3000)

@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-
+/* eslint-disable indent */
+import React, { useState } from "react"
+import PropTypes from "prop-types"
 const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
   const handleNewBlogChange = (event) => {
     switch (event.target.name) {
-      case 'title':
+      case "title":
         setTitle(event.target.value)
         break
-      case 'author':
+      case "author":
         setAuthor(event.target.value)
         break
-      case 'url':
+      case "url":
         setUrl(event.target.value)
         break
       default:
@@ -22,9 +22,9 @@ const BlogForm = ({ createBlog }) => {
   }
 
   const clearBlogFields = () => {
-    setTitle('')
-    setUrl('')
-    setAuthor('')
+    setTitle("")
+    setUrl("")
+    setAuthor("")
   }
   const addBlog = (event) => {
     event.preventDefault()
@@ -44,6 +44,7 @@ const BlogForm = ({ createBlog }) => {
         <div>
           title:
           <input
+            id='title'
             type='text'
             value={title}
             name='title'
@@ -75,6 +76,10 @@ const BlogForm = ({ createBlog }) => {
       </form>
     </div>
   )
+}
+
+BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm

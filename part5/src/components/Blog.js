@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const [showingDetail, setshowingDetail] = useState(false)
 
@@ -32,14 +32,19 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
     return (
       <>
         <div>
-          {blog.title} <button onClick={toggleView}> hide</button>
+          {blog.title}{" "}
+          <button onClick={toggleView} className='hideButton'>
+            hide
+          </button>
         </div>
 
         <div>{blog.url}</div>
 
         <div>
-          {blog.likes}
-          <button onClick={onLikesClick}>like</button>
+          {blog.likes} likes
+          <button onClick={onLikesClick} className='likeButton'>
+            like
+          </button>
         </div>
         <div>{blog.author}</div>
         {showRemove()}
@@ -50,20 +55,26 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const blogBrief = () => {
     return (
       <div>
-        {blog.title} <button onClick={toggleView}>view</button>
+        {blog.title}{" "}
+        <button onClick={toggleView} className='showButton'>
+          view
+        </button>
       </div>
     )
   }
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: 'solid',
+    border: "solid",
     borderWidth: 1,
     marginBottom: 5,
   }
 
   return (
-    <div style={blogStyle}>{showingDetail ? blogDetail() : blogBrief()}</div>
+    <div className='blog' style={blogStyle}>
+      {showingDetail ? blogDetail() : blogBrief()}
+    </div>
   )
 }
 
