@@ -21,7 +21,9 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
     if (blog.user.id === user.id) {
       return (
         <div>
-          <button onClick={onRemoveClick}>remove</button>
+          <button onClick={onRemoveClick} className='delete-button'>
+            remove
+          </button>
         </div>
       )
     }
@@ -31,7 +33,7 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const blogDetail = () => {
     return (
       <>
-        <div>
+        <div className='detailedView'>
           {blog.title}{" "}
           <button onClick={toggleView} className='hideButton'>
             hide
@@ -54,7 +56,7 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
 
   const blogBrief = () => {
     return (
-      <div>
+      <div className='briefView'>
         {blog.title}{" "}
         <button onClick={toggleView} className='showButton'>
           view
