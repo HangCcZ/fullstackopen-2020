@@ -8,7 +8,10 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1,
   }
-  return <div style={style}>{notification}</div>
+
+  const displaySelector = notification === null ? { display: "none" } : style
+
+  return <div style={displaySelector}>{notification}</div>
 }
 
 export default Notification

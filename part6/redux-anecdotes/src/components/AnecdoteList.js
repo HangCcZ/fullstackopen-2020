@@ -1,28 +1,47 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { updateVote } from "../reducers/anecdoteReducer";
+import React from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { updateVote } from "../reducers/anecdoteReducer"
+import {
+  displayNotification,
+  removeNotification,
+} from "../reducers/notificationReducer"
 const AnecdoteList = (props) => {
-  const anecdotes = useSelector((state) => state);
-  const dispatch = useDispatch();
-  const vote = (id) => {
-    dispatch(updateVote(id));
-  };
+  const anecdotes = useSelector((state) => state.anecdotes)
+  const filterValue = useSelector((state) => state.filter)
 
-  return (
-    <div>
-      {anecdotes
-        .sort((a, b) => b.votes - a.votes)
-        .map((anecdote) => (
-          <div key={anecdote.id}>
-            <div>{anecdote.content}</div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>vote</button>
-            </div>
-          </div>
-        ))}
-    </div>
-  );
-};
+  const dispatch = useDispatch()
+  const vote = (anecdote) => {
+    dispatch(updateVote(anecdote.id))
+    dispatch(displayNotification(anecdote))
+    setTimeout(() => dispatch(removeNotification()), 5000)
+  }
 
-export default AnecdoteList;
+  const anecdoteConfig = (listItem) => {
+    return listItem.map((anecdote) => (
+      <div key={anecdote.id}>
+        <div>{anecdote.content}</div>
+        <div>
+          has {anecdote.votes}
+          <button onClick={() => vote(anecdote)}>vote</button>
+        </div>
+      </div>
+    ))
+  }
+
+  const listDisplay = () => {
+    const sortedList = anecdotes.sort((a, b) => b.votes - a.votes)
+    const anecdoteList =
+      filterValue === ""
+        ? anecdoteConfig(anecdotes)
+        : anecdoteConfig(
+            sortedList.filter((anecdote) =>
+              anecdote.content.includes(filterValue)
+            )
+          )
+    return anecdoteList
+  }
+
+  return <div>{listDisplay()}</div>
+}
+
+export default AnecdoteList
