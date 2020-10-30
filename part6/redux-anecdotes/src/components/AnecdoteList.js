@@ -5,6 +5,9 @@ import {
   displayNotification,
   removeNotification,
 } from "../reducers/notificationReducer"
+
+let timer = null
+
 const AnecdoteList = (props) => {
   const anecdotes = useSelector((state) => state.anecdotes)
   const filterValue = useSelector((state) => state.filter)
@@ -13,7 +16,12 @@ const AnecdoteList = (props) => {
   const vote = (anecdote) => {
     dispatch(updateVote(anecdote.id))
     dispatch(displayNotification(anecdote))
-    setTimeout(() => dispatch(removeNotification()), 5000)
+
+    if (timer) {
+      clearTimeout(timer)
+    }
+
+    timer = setTimeout(() => dispatch(removeNotification()), 5000)
   }
 
   const anecdoteConfig = (listItem) => {
