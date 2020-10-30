@@ -1,62 +1,49 @@
-// const anecdotesAtStart = [
-//   "If it hurts, do it more often",
-//   "Adding manpower to a late software project makes it later!",
-//   "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
-//   "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-//   "Premature optimization is the root of all evil.",
-//   "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
-// ]
-
-// const asObject = (anecdote) => {
-//   return {
-//     content: anecdote,
-//     id: getId(),
-//     votes: 0,
-//   }
-// }
-
-// const initialState = anecdotesAtStart.map(asObject)
+import anecdoteService from "../services/anecdotes"
 
 const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
     case "VOTE":
-      const id = action.data.id
-      const anecdoteToChange = state.find((a) => a.id === id)
-      const changedAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1,
-      }
+      const updatedAnecdote = action.data.anecdote
+      const id = updatedAnecdote.id
       return state.map((anecdote) =>
-        anecdote.id !== id ? anecdote : changedAnecdote
+        anecdote.id !== id ? anecdote : updatedAnecdote
       )
     case "NEW":
       return [...state, action.data.anecdote]
 
     case "INIT":
-      return action.data
+      return action.data.anecdotes
     default:
       return state
   }
 }
 
-export const createAnecdote = (anecdote) => {
-  return {
-    type: "NEW",
-    data: { anecdote },
+export const createAnecdote = (content) => {
+  return async (dispatch) => {
+    const anecdote = await anecdoteService.createNew(content)
+
+    dispatch({
+      type: "NEW",
+      data: { anecdote },
+    })
   }
 }
 
-export const updateVote = (id) => {
-  return {
-    type: "VOTE",
-    data: { id },
+export const updateVote = (anecdote) => {
+  return async (dispatch) => {
+    const newAnecdote = await anecdoteService.updateVote(anecdote)
+    dispatch({ type: "VOTE", data: { anecdote: newAnecdote } })
   }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: "INIT",
-    data: anecdotes,
+export const initializeAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await anecdoteService.getAll()
+
+    dispatch({
+      type: "INIT",
+      data: { anecdotes },
+    })
   }
 }
 
