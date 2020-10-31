@@ -2,16 +2,16 @@ import anecdoteService from "../services/anecdotes"
 
 const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
-    case "VOTE":
+    case "VOTE_ANECDOTE":
       const updatedAnecdote = action.data.anecdote
       const id = updatedAnecdote.id
       return state.map((anecdote) =>
         anecdote.id !== id ? anecdote : updatedAnecdote
       )
-    case "NEW":
+    case "NEW_ANECDOTE":
       return [...state, action.data.anecdote]
 
-    case "INIT":
+    case "INIT_ANECDOTE":
       return action.data.anecdotes
     default:
       return state
@@ -23,7 +23,7 @@ export const createAnecdote = (content) => {
     const anecdote = await anecdoteService.createNew(content)
 
     dispatch({
-      type: "NEW",
+      type: "NEW_ANECDOTE",
       data: { anecdote },
     })
   }
@@ -32,7 +32,7 @@ export const createAnecdote = (content) => {
 export const updateVote = (anecdote) => {
   return async (dispatch) => {
     const newAnecdote = await anecdoteService.updateVote(anecdote)
-    dispatch({ type: "VOTE", data: { anecdote: newAnecdote } })
+    dispatch({ type: "VOTE_ANECDOTE", data: { anecdote: newAnecdote } })
   }
 }
 
@@ -41,7 +41,7 @@ export const initializeAnecdotes = () => {
     const anecdotes = await anecdoteService.getAll()
 
     dispatch({
-      type: "INIT",
+      type: "INIT_ANECDOTE",
       data: { anecdotes },
     })
   }
