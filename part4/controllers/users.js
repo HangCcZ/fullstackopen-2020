@@ -1,9 +1,9 @@
-const bcrypt = require('bcrypt')
-const usersRouter = require('express').Router()
-const User = require('../models/user')
+const bcrypt = require("bcrypt")
+const usersRouter = require("express").Router()
+const User = require("../models/user")
 
-usersRouter.get('/', async (req, res) => {
-  const users = await User.find({}).populate('blogs', {
+usersRouter.get("/", async (req, res) => {
+  const users = await User.find({}).populate("blogs", {
     url: 1,
     title: 1,
     author: 1,
@@ -12,15 +12,26 @@ usersRouter.get('/', async (req, res) => {
   res.json(users)
 })
 
-usersRouter.post('/', async (req, res) => {
+usersRouter.get("/:id", async (req, res) => {
+  console.log("received request")
+  const user = await User.findById(req.params.id).populate("blogs", {
+    title: 1,
+    author: 1,
+    url: 1,
+    likes: 1,
+  })
+  res.json(user)
+})
+
+usersRouter.post("/", async (req, res) => {
   const body = req.body
   if (body.password === undefined) {
     return res.status(400).json({
-      error: 'password is missing',
+      error: "password is missing",
     })
   } else if (body.password.length < 3) {
     return res.status(400).json({
-      error: 'password must be at least 3 characters long',
+      error: "password must be at least 3 characters long",
     })
   }
 
@@ -31,6 +42,7 @@ usersRouter.post('/', async (req, res) => {
     username: body.username,
     name: body.name,
     passwordHash,
+    blogs: [],
   })
 
   const savedUser = await user.save()

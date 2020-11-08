@@ -16,11 +16,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  // just added
-  // useEffect(() => {
-  //   fetchBlogs()
-  // }, [])
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser")
 
