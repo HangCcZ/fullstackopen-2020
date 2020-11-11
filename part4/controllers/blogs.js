@@ -31,6 +31,7 @@ blogsRouter.post("/", async (request, response) => {
     url: body.url,
     likes: body.likes || 0,
     user: user,
+    comments: [],
   })
 
   const savedBlog = await blog.save()
@@ -78,8 +79,25 @@ blogsRouter.put("/:id", async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes + 1,
+    comments: body.comments,
   }
   console.log(`params id for like update is`, request.params.id)
+  const newBlog = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, {
+    new: true,
+  })
+
+  response.json(newBlog.toJSON())
+})
+
+blogsRouter.post("/:id/comments", async (request, response) => {
+  console.log("received a new comment")
+  const body = request.body
+  console.log(body)
+  const currentBlog = await Blog.findById(request.params.id).lean()
+  const updatedBlog = {
+    ...currentBlog,
+    comments: [...currentBlog.comments, body.comment],
+  }
   const newBlog = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, {
     new: true,
   })

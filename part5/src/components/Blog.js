@@ -1,9 +1,12 @@
-import React, { useState } from "react"
+import React from "react"
+import Comments from "./Comments"
+import { commentBlog } from "../reducers/blogReducer"
+import { useDispatch } from "react-redux"
+import CommentForm from "./CommentForm"
 const Blog = ({ blog, clickLike, removeBlog, user }) => {
-  const [showingDetail, setshowingDetail] = useState(false)
-
-  const toggleView = () => {
-    setshowingDetail(!showingDetail)
+  const dispatch = useDispatch()
+  if (!blog) {
+    return null
   }
 
   const onLikesClick = () => {
@@ -15,6 +18,10 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
     if (result) {
       removeBlog(blog)
     }
+  }
+
+  const addComment = (comment) => {
+    dispatch(commentBlog(comment, blog))
   }
 
   const showRemove = () => {
@@ -33,14 +40,13 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const blogDetail = () => {
     return (
       <>
-        <div className='detailedView'>
-          {blog.title}{" "}
-          <button onClick={toggleView} className='hideButton'>
-            hide
-          </button>
-        </div>
+        <h2>{blog.title} </h2>
 
-        <div>{blog.url}</div>
+        <div>
+          <a href={`//${blog.url}`} target='_blank' rel='noopener noreferrer'>
+            {blog.url}
+          </a>
+        </div>
 
         <div>
           {blog.likes} likes
@@ -48,20 +54,13 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
             like
           </button>
         </div>
-        <div>{blog.author}</div>
+        <div>added by {blog.author}</div>
         {showRemove()}
+        <div>
+          <CommentForm blog={blog} addComment={addComment} />
+          <Comments blog={blog} />
+        </div>
       </>
-    )
-  }
-
-  const blogBrief = () => {
-    return (
-      <div className='briefView'>
-        {blog.title}{" "}
-        <button onClick={toggleView} className='showButton'>
-          view
-        </button>
-      </div>
     )
   }
 
@@ -75,7 +74,7 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
 
   return (
     <div className='blog' style={blogStyle}>
-      {showingDetail ? blogDetail() : blogBrief()}
+      {blogDetail()}
     </div>
   )
 }

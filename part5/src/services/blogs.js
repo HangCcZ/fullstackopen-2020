@@ -1,6 +1,6 @@
-import axios from 'axios'
-const baseUrl = '/api/blogs'
-const userUrl = '/api/users'
+import axios from "axios"
+const baseUrl = "/api/blogs"
+const userUrl = "/api/users"
 
 let token = null
 const setToken = (newToken) => {
@@ -49,6 +49,13 @@ const updateLikes = async (newObject) => {
   return response.data
 }
 
+const updateComments = async (comment, blogObject) => {
+  const response = await axios.post(`${baseUrl}/${blogObject.id}/comments`, {
+    comment,
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getAllFromUser,
@@ -56,4 +63,5 @@ export default {
   create,
   updateLikes,
   deleteBlog,
+  updateComments,
 }

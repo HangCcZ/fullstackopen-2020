@@ -1,107 +1,122 @@
 import React, { useState, useEffect, useRef } from "react"
 import Blog from "./components/Blog"
-import blogService from "./services/blogs"
-import loginService from "./services/login"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import BlogForm from "./components/BlogForm"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  createBlog,
+  deleteBlog,
+  likeBlog,
+  initializeBlogs,
+  clearBlogs,
+} from "./reducers/blogReducer"
 
+import { loginUser, logoutUser, userFromToken } from "./reducers/userReducer"
+import { fetchAllUsers } from "./reducers/usersReducer"
+import {
+  errorMessage,
+  successMessage,
+  clearMessage,
+} from "./reducers/notificationReducer"
+
+import { Switch, Route, useRouteMatch, Link } from "react-router-dom"
+import UserList from "./components/UserList"
+import Header from "./components/Header"
+import User from "./components/User"
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
+  const users = useSelector((state) => state.users)
+  const notification = useSelector((state) => state.notification)
 
+  const match = useRouteMatch("/users/:id")
+  const matchBlog = useRouteMatch("/blogs/:id")
+  const individualUser = match
+    ? users.find((user) => user.id === match.params.id)
+    : null
+  const individualBlog = matchBlog
+    ? blogs.find((blog) => blog.id === matchBlog.params.id)
+    : null
+
+  // uncontrolled form here
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
 
   const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser")
-
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      fetchBlogs()
-      blogService.setToken(user.token)
+      dispatch(userFromToken(user))
+      dispatch(initializeBlogs())
+      dispatch(fetchAllUsers())
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogOut = async (event) => {
     window.localStorage.removeItem("loggedBlogUser")
-    setUser(null)
-    setBlogs([])
-  }
-
-  const fetchBlogs = async () => {
-    const allBlogs = await blogService.getAll()
-    setBlogs(allBlogs)
+    dispatch(logoutUser())
+    dispatch(clearBlogs())
+    setUsername("")
+    setPassword("")
   }
 
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
-      // user contains token
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem("loggedBlogUser", JSON.stringify(user))
-      blogService.setToken(user.token)
-
-      setUser(user)
-      fetchBlogs()
+      dispatch(loginUser(username, password))
+      dispatch(initializeBlogs())
       setUsername("")
       setPassword("")
     } catch (exception) {
-      setErrorMessage("Wrong username or password")
+      dispatch(errorMessage("Wrong username or password"))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearMessage())
       }, 5000)
     }
   }
 
-  const addBlog = async (blogObject) => {
+  const addBlog = (blogObject) => {
     try {
-      const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
+      dispatch(createBlog(blogObject))
 
       blogFormRef.current.toggleVisibility()
 
-      setErrorMessage(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} created`
+      dispatch(
+        successMessage(
+          `a new blog ${blogObject.title} by ${blogObject.author} created`
+        )
       )
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearMessage())
       }, 3000)
     } catch (exception) {
-      setErrorMessage("Error creating a new blog ")
+      dispatch(errorMessage("Error creating a new blog "))
     }
   }
 
-  const addLike = async (blogObject) => {
+  const addLike = (blogObject) => {
     try {
-      const updatedLikeBlog = { ...blogObject, likes: blogObject.likes + 1 }
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id === updatedLikeBlog.id ? updatedLikeBlog : blog
-        )
-      )
-      await blogService.updateLikes(blogObject)
+      dispatch(likeBlog(blogObject))
     } catch (exception) {
-      setErrorMessage("error updating the vlog")
+      dispatch(errorMessage("error updating the vlog"))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearMessage())
       }, 3000)
     }
   }
 
   const removeBlog = async (blogObject) => {
     try {
-      await blogService.deleteBlog(blogObject)
-      setBlogs(blogs.filter((blog) => blog.id !== blogObject.id))
+      dispatch(deleteBlog(blogObject))
     } catch (exception) {
-      setErrorMessage(`error deleting the vlog, error: ${exception}`)
+      dispatch(errorMessage(`error deleting the vlog, error: ${exception}`))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearMessage())
       }, 3000)
     }
   }
@@ -149,31 +164,73 @@ const App = () => {
 
   const showUserBlogs = () => (
     <div>
-      <h2>Blogs</h2>
-      <p>
-        {user.name} logged in<button onClick={handleLogOut}>Logout</button>
-      </p>
-
+      <Header handleLogOut={handleLogOut} />
       {blogForm()}
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            clickLike={addLike}
-            removeBlog={removeBlog}
-            user={user}
-          />
+          // <Blog
+          //   key={blog.id}
+          //   blog={blog}
+          //   clickLike={addLike}
+          //   removeBlog={removeBlog}
+          //   user={user}
+          // />
+          <li key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </li>
         ))}
     </div>
   )
 
+  const renderUserList = () => {
+    return (
+      <div>
+        <Header handleLogOut={handleLogOut} />
+        <UserList />
+      </div>
+    )
+  }
+
+  const renderUserPanel = () => {
+    return (
+      <div>
+        <Header handleLogOut={handleLogOut} />
+        <User user={individualUser} />
+      </div>
+    )
+  }
+
+  const renderSingleBlog = () => {
+    return (
+      <div>
+        <Header handleLogOut={handleLogOut} />
+        <Blog
+          blog={individualBlog}
+          clickLike={addLike}
+          removeBlog={removeBlog}
+          user={user}
+        />
+      </div>
+    )
+  }
+
   return (
     <div>
-      <h1>blogs</h1>
-      <Notification message={errorMessage} />
-      {user === null ? loginForm() : showUserBlogs()}
+      <Notification message={notification} />
+      <Switch>
+        <Route path='/users/:id'>{renderUserPanel()}</Route>
+
+        <Route exact path='/users'>
+          {renderUserList()}
+        </Route>
+
+        <Route path='/blogs/:id'>{renderSingleBlog()}</Route>
+
+        <Route exact path='/'>
+          {user === null ? loginForm() : showUserBlogs()}
+        </Route>
+      </Switch>
     </div>
   )
 }
