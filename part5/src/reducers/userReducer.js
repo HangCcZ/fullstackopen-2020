@@ -7,7 +7,9 @@ const userReducer = (state = null, action) => {
       return action.data.user
     case "TOKEN_USER":
       return action.data.user
-    case "FAIL" || "SIGNOUT":
+    case "SIGNOUT":
+      return null
+    case "NULL":
       return null
     default:
       return state

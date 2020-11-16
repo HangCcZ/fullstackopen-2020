@@ -1,15 +1,17 @@
 import React from "react"
+import { ListGroup } from "react-bootstrap"
 const Comments = ({ blog }) => {
   if (!blog.comments) {
     return null
   }
   return (
     <div>
-      <h2>comments</h2>
-
-      {blog.comments.map((comment) => (
-        <li key={comment}>{comment}</li>
-      ))}
+      <h6>comments</h6>
+      <ListGroup>
+        {blog.comments.map((comment) => (
+          <ListGroup.Item key={comment}>{comment}</ListGroup.Item>
+        ))}
+      </ListGroup>
     </div>
   )
 }

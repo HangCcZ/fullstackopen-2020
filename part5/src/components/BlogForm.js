@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 import React, { useState } from "react"
 import PropTypes from "prop-types"
+import { Button, Form } from "react-bootstrap"
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
@@ -38,47 +39,44 @@ const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <div>
+    <>
       <h2>Create a new blog</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
+      <Form onSubmit={addBlog}>
+        <Form.Group>
+          <Form.Label>title:</Form.Label>
+
+          <Form.Control
             id='title'
             type='text'
             value={title}
             name='title'
             onChange={handleNewBlogChange}
           />
-        </div>
 
-        <div>
-          author:
-          <input
+          <Form.Label>author:</Form.Label>
+          <Form.Control
             type='text'
             id='author'
             value={author}
             name='author'
             onChange={handleNewBlogChange}
           />
-        </div>
 
-        <div>
-          url:
-          <input
+          <Form.Label>url:</Form.Label>
+          <Form.Control
             type='text'
             value={url}
             name='url'
             id='url'
             onChange={handleNewBlogChange}
           />
-        </div>
+        </Form.Group>
 
-        <button id='create-button' type='submit'>
+        <Button variant='primary' id='create-button' type='submit'>
           create
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </>
   )
 }
 

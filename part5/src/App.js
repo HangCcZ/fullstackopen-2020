@@ -24,6 +24,8 @@ import { Switch, Route, useRouteMatch, Link } from "react-router-dom"
 import UserList from "./components/UserList"
 import Header from "./components/Header"
 import User from "./components/User"
+import { Table, Form, Button } from "react-bootstrap"
+
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector((state) => state.blogs)
@@ -122,41 +124,39 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
+    <Form onSubmit={handleLogin}>
+      <Form.Group>
+        <Form.Label>username:</Form.Label>
+
+        <Form.Control
           type='text'
           value={username}
           id='username'
           name='Username'
           onChange={({ target }) => setUsername(target.value)}
         />
-      </div>
 
-      <div>
-        password
-        <input
+        <Form.Label>username:</Form.Label>
+        <Form.Control
           type='password'
           id='password'
           value={password}
           name='Password'
           onChange={({ target }) => setPassword(target.value)}
         />
-      </div>
-      <button id='login-button' type='submit'>
+      </Form.Group>
+      <Button variant='primary' type='submit'>
         login
-      </button>
-    </form>
+      </Button>
+    </Form>
   )
   const blogForm = () => (
     <Togglable
-      buttonLabel='new blog'
+      buttonLabel='Post a new blog'
       className='newBlogToggle'
       ref={blogFormRef}
     >
       <div>
-        <button onClick={handleLogOut}>Logout</button>
         <BlogForm createBlog={addBlog} />
       </div>
     </Togglable>
@@ -166,20 +166,20 @@ const App = () => {
     <div>
       <Header handleLogOut={handleLogOut} />
       {blogForm()}
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          // <Blog
-          //   key={blog.id}
-          //   blog={blog}
-          //   clickLike={addLike}
-          //   removeBlog={removeBlog}
-          //   user={user}
-          // />
-          <li key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </li>
-        ))}
+      <Table striped>
+        <tbody>
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <tr key={blog.id}>
+                <td>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </td>
+                <td>{blog.author}</td>
+              </tr>
+            ))}
+        </tbody>
+      </Table>
     </div>
   )
 
@@ -216,7 +216,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className='container'>
       <Notification message={notification} />
       <Switch>
         <Route path='/users/:id'>{renderUserPanel()}</Route>

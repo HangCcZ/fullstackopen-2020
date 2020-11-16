@@ -3,6 +3,7 @@ import Comments from "./Comments"
 import { commentBlog } from "../reducers/blogReducer"
 import { useDispatch } from "react-redux"
 import CommentForm from "./CommentForm"
+import { Button, Card } from "react-bootstrap"
 const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const dispatch = useDispatch()
   if (!blog) {
@@ -27,11 +28,15 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
   const showRemove = () => {
     if (blog.user.id === user.id) {
       return (
-        <div>
-          <button onClick={onRemoveClick} className='delete-button'>
+        <>
+          <Button
+            variant='danger'
+            onClick={onRemoveClick}
+            className='delete-button'
+          >
             remove
-          </button>
-        </div>
+          </Button>
+        </>
       )
     }
     return null
@@ -39,44 +44,30 @@ const Blog = ({ blog, clickLike, removeBlog, user }) => {
 
   const blogDetail = () => {
     return (
-      <>
-        <h2>{blog.title} </h2>
-
-        <div>
-          <a href={`//${blog.url}`} target='_blank' rel='noopener noreferrer'>
-            {blog.url}
-          </a>
-        </div>
-
-        <div>
-          {blog.likes} likes
-          <button onClick={onLikesClick} className='likeButton'>
-            like
-          </button>
-        </div>
-        <div>added by {blog.author}</div>
-        {showRemove()}
-        <div>
-          <CommentForm blog={blog} addComment={addComment} />
-          <Comments blog={blog} />
-        </div>
-      </>
+      <div>
+        <Card>
+          <Card.Body>
+            <Card.Title>{blog.title}</Card.Title>
+            <Card.Text>
+              {blog.likes} likes{" "}
+              <Button
+                variant='outline-success'
+                onClick={onLikesClick}
+                className='likeButton'
+              >
+                Like
+              </Button>
+              {showRemove()}
+              <Comments blog={blog} />
+              <CommentForm blog={blog} addComment={addComment} />
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
     )
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  }
-
-  return (
-    <div className='blog' style={blogStyle}>
-      {blogDetail()}
-    </div>
-  )
+  return blogDetail()
 }
 
 export default Blog

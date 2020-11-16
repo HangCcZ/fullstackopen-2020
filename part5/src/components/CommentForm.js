@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-
+import { Form, Button } from "react-bootstrap"
 const CommentForm = ({ addComment }) => {
   const [comment, setComment] = useState("")
 
@@ -13,22 +13,30 @@ const CommentForm = ({ addComment }) => {
     addComment(comment)
   }
 
+  const margins = {
+    margin: 5,
+  }
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Control
             id='comment'
             type='text'
             value={comment}
             name='comment'
             onChange={handleChange}
-          ></input>
-          <button type='submit' id='create-comment'>
-            add comment
-          </button>
-        </div>
-      </form>
+            placeholder='Add your comment here'
+          />
+          <Form.Text className='text-muted'>
+            Please follow the community's rule!
+          </Form.Text>
+        </Form.Group>
+        <Button type='submit' id='create-comment'>
+          add comment
+        </Button>
+      </Form>
     </div>
   )
 }
