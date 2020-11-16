@@ -13,50 +13,63 @@ const margins = {
 }
 
 const Header = ({ handleLogOut }) => {
-  const user = useSelector((state) => {
-    return state.user
-  })
+  const user = useSelector((state) => state.user)
 
   if (!user) {
-    return null
+    return (
+      <Navbar collapseOnSelect expand='lg' bg='light'>
+        <Navbar.Brand>
+          <Link style={padding} to='/'>
+            Hang's Blog App
+          </Link>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='mr-auto'></Nav>
+          <Nav className='justify-content-end'>
+            <Link style={padding} to='/signup'>
+              SIGN UP
+            </Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    )
   }
 
   const renderLoginMessage = () => {
     return (
-      <>
-        {user.name} logged in
+      <Navbar.Text>
+        Hi, {user.name}
         <Button variant='secondary' style={margins} onClick={handleLogOut}>
-          Logout
+          LOG OUT
         </Button>
-      </>
+      </Navbar.Text>
     )
   }
 
   return (
     <Navbar collapseOnSelect expand='lg' bg='light'>
-      <Navbar.Brand href='/'>
+      <Navbar.Brand>
         <Link style={padding} to='/'>
           Hang's Blog App
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls='responsive-navbar-nav' />
       <Navbar.Collapse id='responsive-navbar-nav'>
-        <Nav fill className='mr-auto'>
-          <Nav.Link href='#home' as='span'>
+        <Nav className='mr-auto'>
+          <Nav.Link>
             <Link style={padding} to='/'>
               home
             </Link>
           </Nav.Link>
-          <Nav.Link href='#' as='span'>
+          <Nav.Link>
             <Link style={padding} to='/users'>
               users
             </Link>
           </Nav.Link>
-          <Nav.Link href='#' as='span'></Nav.Link>
         </Nav>
-        <Alert variant='info' style={margins}>
-          {user ? renderLoginMessage() : <Link to='/login'>login</Link>}
-        </Alert>
+
+        <Nav className='justify-content-end'> {renderLoginMessage()}</Nav>
       </Navbar.Collapse>
     </Navbar>
   )

@@ -24,7 +24,7 @@ import { Switch, Route, useRouteMatch, Link } from "react-router-dom"
 import UserList from "./components/UserList"
 import Header from "./components/Header"
 import User from "./components/User"
-import { Table, Form, Button } from "react-bootstrap"
+import { Table, Form, Button, Container } from "react-bootstrap"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -164,7 +164,7 @@ const App = () => {
 
   const showUserBlogs = () => (
     <div>
-      <Header handleLogOut={handleLogOut} />
+      {/* <Header handleLogOut={handleLogOut} /> */}
       {blogForm()}
       <Table striped>
         <tbody>
@@ -183,55 +183,50 @@ const App = () => {
     </div>
   )
 
-  const renderUserList = () => {
-    return (
-      <div>
-        <Header handleLogOut={handleLogOut} />
-        <UserList />
-      </div>
-    )
-  }
+  const renderUserList = () => (
+    <div>
+      <UserList />
+    </div>
+  )
 
-  const renderUserPanel = () => {
-    return (
-      <div>
-        <Header handleLogOut={handleLogOut} />
-        <User user={individualUser} />
-      </div>
-    )
-  }
+  const renderUserPanel = () => (
+    <div>
+      {/* <Header handleLogOut={handleLogOut} /> */}
+      <User user={individualUser} />
+    </div>
+  )
 
-  const renderSingleBlog = () => {
-    return (
-      <div>
-        <Header handleLogOut={handleLogOut} />
-        <Blog
-          blog={individualBlog}
-          clickLike={addLike}
-          removeBlog={removeBlog}
-          user={user}
-        />
-      </div>
-    )
-  }
+  const renderSingleBlog = () => (
+    <div>
+      <Blog
+        blog={individualBlog}
+        clickLike={addLike}
+        removeBlog={removeBlog}
+        user={user}
+      />
+    </div>
+  )
 
   return (
-    <div className='container'>
-      <Notification message={notification} />
-      <Switch>
-        <Route path='/users/:id'>{renderUserPanel()}</Route>
+    <>
+      <Header handleLogOut={handleLogOut} />
+      <Container>
+        <Notification message={notification} />
+        <Switch>
+          <Route path='/users/:id'>{renderUserPanel()}</Route>
 
-        <Route exact path='/users'>
-          {renderUserList()}
-        </Route>
+          <Route exact path='/users'>
+            {renderUserList()}
+          </Route>
 
-        <Route path='/blogs/:id'>{renderSingleBlog()}</Route>
+          <Route path='/blogs/:id'>{renderSingleBlog()}</Route>
 
-        <Route exact path='/'>
-          {user === null ? loginForm() : showUserBlogs()}
-        </Route>
-      </Switch>
-    </div>
+          <Route exact path='/'>
+            {user === null ? loginForm() : showUserBlogs()}
+          </Route>
+        </Switch>
+      </Container>
+    </>
   )
 }
 
