@@ -8,6 +8,7 @@ export const ALL_BOOKS = gql`
         born
       }
       published
+      genres
     }
   }
 `
@@ -18,6 +19,14 @@ export const ALL_AUTHORS = gql`
       name
       born
       bookCount
+    }
+  }
+`
+
+export const CURRENT_USER = gql`
+  query getCurrentUser {
+    me {
+      favoriteGenre
     }
   }
 `

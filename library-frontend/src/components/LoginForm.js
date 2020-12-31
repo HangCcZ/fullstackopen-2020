@@ -1,18 +1,15 @@
 import { useMutation } from "@apollo/client"
 import React, { useState, useEffect } from "react"
 import { LOGIN } from "../mutations"
-const LoginForm = ({ setToken }) => {
+const LoginForm = ({ setToken, setLoginClick }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [login, result] = useMutation(LOGIN, {
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message)
-    },
-  })
+  const [login, result] = useMutation(LOGIN)
 
   useEffect(() => {
     if (result.data) {
       const token = result.data.login.value
+      setLoginClick(false)
       setToken(token)
       localStorage.setItem("book-user-token", token)
     }
@@ -36,7 +33,7 @@ const LoginForm = ({ setToken }) => {
         <div>
           password
           <input
-            value={username}
+            value={password}
             onChange={({ target }) => setPassword(target.value)}
           ></input>
         </div>
