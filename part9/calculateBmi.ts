@@ -1,7 +1,7 @@
-interface massHeight{
-    mass:number,
-    height:number
-}
+// interface massHeight{
+//     mass:number,
+//     height:number
+// }
 
 
 const calculateBmi = (height:number,mass:number):string=>{
@@ -36,13 +36,13 @@ const calculateBmi = (height:number,mass:number):string=>{
     }
 }
 
-const parseBMI = (args:Array<string>):massHeight=>{
-    return{
-        height:Number(args[2]),
-        mass:Number(args[3]),
+// const parseBMI = (args:Array<string>):massHeight=>{
+//     return{
+//         height:Number(args[2]),
+//         mass:Number(args[3]),
         
-    }
-}
+//     }
+// }
 
-const{height,mass} = parseBMI(process.argv)
-console.log(calculateBmi(height,mass))
+
+export {calculateBmi}
