@@ -13,6 +13,14 @@ type Patient = {
     ssn:string
 };
 
+enum Gender{
+    Male = 'male',
+    Female = 'female',
+    Other = 'other'
+}
+
 type OmitPatientSSN = Omit<Patient,'ssn'>;
 
-export {Diagnose,Patient,OmitPatientSSN};
+type newPatientEntry = Omit<Patient,'id'>;
+
+export {Diagnose,Patient,OmitPatientSSN,newPatientEntry,Gender};

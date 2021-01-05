@@ -1,5 +1,5 @@
 import patientsData from '../data/patients.json';
-import {Patient,OmitPatientSSN} from '../types/types';
+import {Patient,OmitPatientSSN,newPatientEntry} from '../types/types';
 
 const patients :Array<Patient> = patientsData as Array<Patient>;
 
@@ -13,5 +13,12 @@ const getPatientsNoneSSN = ():OmitPatientSSN[]=>{
     }));
 };
 
+const addPatient = (entry:newPatientEntry):Patient=>{
+    
+    const newPatient = {...entry,id:(Math.random()*1000).toString()};
+    patients.push(newPatient);
+    return newPatient;
+};
 
-export{getPatients,getPatientsNoneSSN};
+
+export{getPatients,getPatientsNoneSSN,addPatient};
