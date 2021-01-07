@@ -13,7 +13,8 @@ const Part:React.FC<{coursePart:CoursePart}>=({coursePart})=>{
             
         case "Deeper type usage":
             return (<div>{coursePart.name} {coursePart.exerciseSubmissionLink} {coursePart.description} {coursePart.exerciseCount}</div>)
-            
+        case "2021 Full Stack Course":
+            return (<div>{coursePart.name} {coursePart.description} {coursePart.exerciseCount} {coursePart.credits}</div>)
         default:
             return null
     }
