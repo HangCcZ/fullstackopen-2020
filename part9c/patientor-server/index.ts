@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import {getEntries} from './services/diagnoseService';
-import {getPatientsNoneSSN,addPatient} from './services/patientService'
+import {getPatientsNoneSSN,addPatient,getPatientByID} from './services/patientService'
 import {toNewDiaryEntry} from './utils/toNewDiaryEntry';
 const app = express();
 app.use(cors());
@@ -34,6 +34,16 @@ app.post('/api/patients',(req,res)=>{
         res.status(400).send(e.message);
     }
    
+});
+
+app.get('/api/patients/:id',(req,res)=>{
+    const patient = getPatientByID(req.params.id);
+    if(patient){
+        return res.send(patient);
+    }
+    else{
+        return res.send('Patient not found');
+    }
 });
 
 app.listen(PORT,()=>{

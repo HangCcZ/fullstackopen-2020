@@ -8,9 +8,15 @@ const getPatients = ():Array<Patient>=>{
 };
 
 const getPatientsNoneSSN = ():OmitPatientSSN[]=>{
-    return patients.map(({name,id,dateOfBirth,gender,occupation})=>({
-        name,id,dateOfBirth,gender,occupation
+    return patients.map(({name,id,dateOfBirth,gender,occupation,entries})=>({
+        name,id,dateOfBirth,gender,occupation,entries
     }));
+};
+
+const getPatientByID = (id:string):Patient|undefined=>{
+    const patientFound =  patients.find(patient=>patient.id === id);
+    console.log(patientFound);
+    return patientFound?patientFound:undefined;
 };
 
 const addPatient = (entry:newPatientEntry):Patient=>{
@@ -21,4 +27,4 @@ const addPatient = (entry:newPatientEntry):Patient=>{
 };
 
 
-export{getPatients,getPatientsNoneSSN,addPatient};
+export{getPatients,getPatientsNoneSSN,addPatient,getPatientByID};

@@ -1,26 +1,31 @@
-type Diagnose = {
+export type Diagnose = {
     code:string,
     name:string,
     latin?:string
 };
 
-type Patient = {
-    name:string,
-    id:string,
-    dateOfBirth:string,
-    gender:string,
-    occupation:string,
-    ssn:string
-};
+export interface Entry{
+    story:string;
+}
 
-enum Gender{
+export interface Patient {
+    id: string;
+    name: string;
+    ssn: string;
+    occupation: string;
+    gender: Gender;
+    dateOfBirth: string;
+    entries: Entry[]
+  }
+
+export enum Gender{
     Male = 'male',
     Female = 'female',
     Other = 'other'
 }
 
-type OmitPatientSSN = Omit<Patient,'ssn'>;
+export type OmitPatientSSN = Omit<Patient,'ssn'>;
 
-type newPatientEntry = Omit<Patient,'id'>;
+export type newPatientEntry = Omit<Patient,'id'>;
 
-export {Diagnose,Patient,OmitPatientSSN,newPatientEntry,Gender};
+export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;
