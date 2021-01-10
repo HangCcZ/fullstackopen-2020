@@ -1,6 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Switch,useParams } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  useRouteMatch,
+} from "react-router-dom";
 import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
@@ -8,13 +14,17 @@ import { useStateValue } from "./state";
 import { Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
-import PatientInfo from '../src/components/PatientInfo'
+import PatientInfo from "../src/components/PatientInfo";
 
 const App: React.FC = () => {
-  const [{patients}, dispatch] = useStateValue();
-  const { id } = useParams<{ id: string }>();
-  const patient = Object.values(patients).find((patient: Patient)=>patient.id===id);
-  
+  const [{ patients }, dispatch] = useStateValue();
+  const match = useRouteMatch<{ id: string }>("/patients/:id");
+  const patient = match
+    ? Object.values(patients).find(
+        (patient: Patient) => patient.id === match.params.id
+      )
+    : undefined;
+
   React.useEffect(() => {
     axios.get<void>(`${apiBaseUrl}/ping`);
 
@@ -41,8 +51,17 @@ const App: React.FC = () => {
           </Button>
           <Divider hidden />
           <Switch>
-           
-            <Route path="/patients/:id"><PatientInfo/></Route>
+            <Route path="/patients/:id">
+              {patient ? (
+                <PatientInfo
+                  name={patient.name}
+                  gender={patient.gender}
+                  occupation={patient.occupation}
+                  ssn={patient.ssn}
+                  id={patient.id}
+                />
+              ) : null}
+            </Route>
             <Route path="/" render={() => <PatientListPage />} />
           </Switch>
         </Container>
