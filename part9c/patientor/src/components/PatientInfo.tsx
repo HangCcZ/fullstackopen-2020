@@ -2,7 +2,7 @@ import React from "react";
 import { Patient } from "../types";
 import axios from "axios";
 import { Icon } from "semantic-ui-react";
-import { useStateValue } from "../state";
+import { useStateValue, addPatientDetail } from "../state";
 import { apiBaseUrl } from "../constants";
 import { useParams } from "react-router-dom";
 const renderGenderIcon = (gender: string) => {
@@ -28,7 +28,7 @@ const PatientInfo: React.FC = () => {
         const { data: patient } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
-        dispatch({ type: "ADD_PATIENT_DETAIL", payload: patient });
+        dispatch(addPatientDetail(patient));
       } catch (e) {
         console.error(e);
       }
