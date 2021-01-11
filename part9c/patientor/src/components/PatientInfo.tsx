@@ -1,10 +1,12 @@
 import React from "react";
 import { Patient, Entry } from "../types";
 import axios from "axios";
-import { Icon } from "semantic-ui-react";
+import { Icon, Item } from "semantic-ui-react";
 import { useStateValue, addPatientDetail } from "../state";
 import { apiBaseUrl } from "../constants";
 import { useParams } from "react-router-dom";
+import EntryDetails from "./EntryDetails";
+
 const renderGenderIcon = (gender: string) => {
   if (gender === "male") {
     return <Icon className="mars" />;
@@ -22,28 +24,32 @@ const PatientInfo: React.FC = () => {
   );
 
   const renderEntries = (entries: Entry[]) => {
-    return entries.map((entry) => {
-      return (
-        <div key={entry.id}>
-          {`${entry.date} ${entry.description}`}
-          {entry.diagnosisCodes
-            ? entry.diagnosisCodes.map((diagnosis) => {
-                let diagnosisName = null;
-                for (const [code, name] of Object.entries(diagnoses)) {
-                  if (code === diagnosis) {
-                    diagnosisName = name;
-                    break;
-                  }
-                }
+    return (
+      <Item.Group>
+        {entries.map((entry) => {
+          return (
+            <EntryDetails key={entry.id} entry={entry} />
+            // <div key={entry.id}>
+            //   {entry.diagnosisCodes
+            //     ? entry.diagnosisCodes.map((diagnosis) => {
+            //         // let diagnosisName = null;
+            //         // for (const [code, name] of Object.entries(diagnoses)) {
+            //         //   if (code === diagnosis) {
+            //         //     diagnosisName = name;
+            //         //     break;
+            //         //   }
+            //         // }
 
-                return (
-                  <li key={diagnosis}>{`   ${diagnosis} ${diagnosisName}`}</li>
-                );
-              })
-            : null}
-        </div>
-      );
-    });
+            //         // return (
+            //         //   <li key={diagnosis}>{`   ${diagnosis} ${diagnosisName}`}</li>
+            //         // );
+            //       })
+            //     : null}
+            // </div>
+          );
+        })}
+      </Item.Group>
+    );
   };
 
   React.useEffect(() => {
