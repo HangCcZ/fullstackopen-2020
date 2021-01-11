@@ -15,9 +15,8 @@ const renderGenderIcon = (gender: string) => {
 };
 
 const PatientInfo: React.FC = () => {
-  const [{ patientsDetail }, dispatch] = useStateValue();
+  const [{ patientsDetail, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
-
   const patient = Object.values(patientsDetail).find(
     (patient: Patient) => patient.id === id
   );
@@ -29,11 +28,16 @@ const PatientInfo: React.FC = () => {
           {`${entry.date} ${entry.description}`}
           {entry.diagnosisCodes
             ? entry.diagnosisCodes.map((diagnosis) => {
+                let diagnosisName = null;
+                for (const [code, name] of Object.entries(diagnoses)) {
+                  if (code === diagnosis) {
+                    diagnosisName = name;
+                    break;
+                  }
+                }
+
                 return (
-                  <>
-                    {" "}
-                    <li key={diagnosis}>{diagnosis}</li>
-                  </>
+                  <li key={diagnosis}>{`   ${diagnosis} ${diagnosisName}`}</li>
                 );
               })
             : null}
