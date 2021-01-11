@@ -1,17 +1,21 @@
 import { State } from "./state";
 import { Patient } from "../types";
 
+export const SET_PATIENT_LIST = "SET_PATIENT_LIST";
+export const ADD_PATIENT = "ADD_PATIENT";
+export const ADD_PATIENT_DETAIL = "ADD_PATIENT_DETAIL";
+
 export type Action =
+  | {
+      type: "ADD_PATIENT_DETAIL";
+      payload: Patient;
+    }
   | {
       type: "SET_PATIENT_LIST";
       payload: Patient[];
     }
   | {
       type: "ADD_PATIENT";
-      payload: Patient;
-    }
-  | {
-      type: "ADD_PATIENT_DETAIL";
       payload: Patient;
     };
 

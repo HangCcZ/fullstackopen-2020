@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from "react";
 import { Patient } from "../types";
 
 import { Action } from "./reducer";
-
+import { SET_PATIENT_LIST, ADD_PATIENT, ADD_PATIENT_DETAIL } from "./reducer";
 export type State = {
   patients: { [id: string]: Patient };
   patientsDetail: { [id: string]: Patient };
@@ -35,3 +35,24 @@ export const StateProvider: React.FC<StateProviderProps> = ({
   );
 };
 export const useStateValue = () => useContext(StateContext);
+
+export const setPatientList = (payload: Patient[]) => {
+  return {
+    type: SET_PATIENT_LIST,
+    payload,
+  } as Action;
+};
+
+export const addPatient = (payload: Patient) => {
+  return {
+    type: ADD_PATIENT,
+    payload,
+  } as Action;
+};
+
+export const addPatientDetail = (payload: Patient) => {
+  return {
+    type: ADD_PATIENT_DETAIL,
+    payload,
+  } as Action;
+};

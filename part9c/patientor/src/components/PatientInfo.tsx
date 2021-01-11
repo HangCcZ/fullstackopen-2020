@@ -37,7 +37,7 @@ const PatientInfo: React.FC = () => {
     if (!patient) {
       fetchPatientDetail();
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, patient]);
 
   if (patient) {
     return (
