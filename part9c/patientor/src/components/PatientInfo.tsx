@@ -1,5 +1,5 @@
 import React from "react";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
 import axios from "axios";
 import { Icon } from "semantic-ui-react";
 import { useStateValue, addPatientDetail } from "../state";
@@ -21,6 +21,26 @@ const PatientInfo: React.FC = () => {
   const patient = Object.values(patientsDetail).find(
     (patient: Patient) => patient.id === id
   );
+
+  const renderEntries = (entries: Entry[]) => {
+    return entries.map((entry) => {
+      return (
+        <div key={entry.id}>
+          {`${entry.date} ${entry.description}`}
+          {entry.diagnosisCodes
+            ? entry.diagnosisCodes.map((diagnosis) => {
+                return (
+                  <>
+                    {" "}
+                    <li key={diagnosis}>{diagnosis}</li>
+                  </>
+                );
+              })
+            : null}
+        </div>
+      );
+    });
+  };
 
   React.useEffect(() => {
     const fetchPatientDetail = async () => {
@@ -49,6 +69,11 @@ const PatientInfo: React.FC = () => {
           </h2>
           <div>ssn:{patient.ssn}</div>
           <div>occupation: {patient.occupation}</div>
+          <br />
+          <div>
+            <h3>entries:</h3>
+            <div>{patient.entries ? renderEntries(patient.entries) : null}</div>
+          </div>
         </div>
       </div>
     );
