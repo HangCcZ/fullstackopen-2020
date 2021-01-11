@@ -30,7 +30,7 @@ const parseDateOfBirth = (dateOfBirth:any):string=>{
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const parseGender = (gender:any):string=>{
+const parseGender = (gender:any):Gender=>{
     if(!gender || !isString(gender) ||!isGender(gender)){
          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
          throw new Error(`Incorrect or missing gender: ${gender}`);
@@ -64,7 +64,9 @@ const toNewDiaryEntry = (object:any):newPatientEntry=>{
         gender:parseGender(object.gender),
         occupation:parseOccupation(object.occupation),
         ssn:parseSSN(object.ssn),
-        dateOfBirth:parseDateOfBirth(object.dateOfBirth)
+        dateOfBirth:parseDateOfBirth(object.dateOfBirth),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        entries:object.entries,
 
     };
 
