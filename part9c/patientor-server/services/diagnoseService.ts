@@ -1,11 +1,16 @@
-import diagnosesData from '../data/diagnoses.json';
-import {Diagnose} from '../types/types';
+import diagnosesData from "../data/diagnoses.json";
+import { Diagnosis } from "../types/types";
 
-const diagnoses :Array<Diagnose> = diagnosesData as Array<Diagnose>;
+const diagnoses: Array<Diagnosis> = diagnosesData as Array<Diagnosis>;
 
-const getEntries = ():Array<Diagnose>=>{
-    return diagnoses;
+const getEntries = (): Array<Diagnosis> => {
+  console.log(diagnoses);
+  return diagnoses;
 };
 
+const getDiagnosisCode = (code: string): Diagnosis | undefined => {
+  const diagnoseResult = diagnoses.find((diagnose) => diagnose.code === code);
+  return diagnoseResult;
+};
 
-export{getEntries};
+export { getEntries, getDiagnosisCode };

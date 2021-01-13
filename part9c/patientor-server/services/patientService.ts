@@ -1,5 +1,11 @@
 import patientsData from "../data/patients";
-import { Patient, OmitPatientSSN, newPatientEntry } from "../types/types";
+import {
+  Patient,
+  OmitPatientSSN,
+  newPatientEntry,
+  newVisitEntry,
+  Entry,
+} from "../types/types";
 
 const patients: Array<Patient> = patientsData;
 const getPatients = (): Array<Patient> => {
@@ -20,9 +26,7 @@ const getPatientsNoneSSN = (): OmitPatientSSN[] => {
 };
 
 const getPatientByID = (id: string): Patient | undefined => {
-  console.log(patients);
   const patientFound = patients.find((patient) => patient.id === id);
-  console.log(patientFound);
   return patientFound ? patientFound : undefined;
 };
 
@@ -32,4 +36,22 @@ const addPatient = (entry: newPatientEntry): Patient => {
   return newPatient;
 };
 
-export { getPatients, getPatientsNoneSSN, addPatient, getPatientByID };
+const addVisitEntry = (entry: newVisitEntry, id: string): Entry | undefined => {
+  const newEntry = {
+    ...entry,
+    id: (Math.random() * 1000).toString(),
+  } as Entry;
+  const patientFound = patients.find((patient) => patient.id === id);
+  if (patientFound) {
+    patientFound.entries.push(newEntry);
+  }
+  return undefined;
+};
+
+export {
+  getPatients,
+  getPatientsNoneSSN,
+  addPatient,
+  getPatientByID,
+  addVisitEntry,
+};
