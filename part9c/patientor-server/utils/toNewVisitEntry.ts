@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { HealthCheckRating } from "../types/types";
-
-import { newVisitEntry } from "../types/types";
+import { newVisitEntry, SickLeave } from "../types/types";
 import { isString } from "./toNewDiaryEntry";
 
 const isHealthCheckRating = (param: any): param is HealthCheckRating => {
@@ -32,12 +31,17 @@ const parseEmployerName = (employerName: any): string => {
   return employerName;
 };
 
-const parseSickLeave = (sickLeave: any): string => {
-  if (!sickLeave || !isString(sickLeave)) {
+const parseSickLeave = (sickLeave: any): SickLeave => {
+  if (
+    !sickLeave ||
+    !(typeof sickLeave === "object") ||
+    !sickLeave.startDate ||
+    !sickLeave.endDate
+  ) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new Error(`Incorrect or missing sick leave: ${sickLeave}`);
   }
-  return sickLeave;
+  return sickLeave as SickLeave;
 };
 
 const parseDescription = (description: any): string => {

@@ -36,7 +36,10 @@ const addPatient = (entry: newPatientEntry): Patient => {
   return newPatient;
 };
 
-const addVisitEntry = (entry: newVisitEntry, id: string): Entry | undefined => {
+const addVisitEntry = (
+  entry: newVisitEntry,
+  id: string
+): Patient | undefined => {
   const newEntry = {
     ...entry,
     id: (Math.random() * 1000).toString(),
@@ -44,6 +47,7 @@ const addVisitEntry = (entry: newVisitEntry, id: string): Entry | undefined => {
   const patientFound = patients.find((patient) => patient.id === id);
   if (patientFound) {
     patientFound.entries.push(newEntry);
+    return patientFound;
   }
   return undefined;
 };

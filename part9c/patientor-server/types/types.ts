@@ -14,6 +14,11 @@ export interface Patient {
   entries: Entry[];
 }
 
+export interface SickLeave {
+  startDate: string;
+  endDate: string;
+}
+
 export enum Gender {
   Male = "male",
   Female = "female",
