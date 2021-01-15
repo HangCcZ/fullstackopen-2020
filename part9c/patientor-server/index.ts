@@ -52,8 +52,8 @@ app.get("/api/patients/:id", (req, res) => {
 app.post("/api/patients/:id/entries", (req, res) => {
   try {
     const newEntry = toNewVisitEntry(req.body);
-    const addedEntry = addVisitEntry(newEntry, req.params.id);
-    return res.send(addedEntry);
+    const updatedPatient = addVisitEntry(newEntry, req.params.id);
+    return res.send(updatedPatient);
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return res.status(400).send(e.message);

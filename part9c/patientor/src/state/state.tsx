@@ -7,6 +7,7 @@ import {
   ADD_PATIENT,
   ADD_PATIENT_DETAIL,
   SET_DIAGNOSES_LIST,
+  ADD_PATIENT_ENTRY,
 } from "./reducer";
 export type State = {
   patients: { [id: string]: Patient };
@@ -67,6 +68,13 @@ export const addPatient = (payload: Patient) => {
 export const addPatientDetail = (payload: Patient) => {
   return {
     type: ADD_PATIENT_DETAIL,
+    payload,
+  } as Action;
+};
+
+export const addPatientEntry = (payload: Patient) => {
+  return {
+    type: ADD_PATIENT_ENTRY,
     payload,
   } as Action;
 };
