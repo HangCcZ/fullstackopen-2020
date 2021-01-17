@@ -35,7 +35,7 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         diagnoses: {
           ...action.payload.reduce(
-            (memo, diagnose) => ({ ...memo, [diagnose.code]: diagnose.name }),
+            (memo, diagnose) => ({ ...memo, [diagnose.code]: diagnose }),
             {}
           ),
           ...state.diagnoses,

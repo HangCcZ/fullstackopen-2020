@@ -8,7 +8,10 @@ import { useParams } from "react-router-dom";
 import EntryDetails from "./EntryDetails";
 import { Button } from "semantic-ui-react";
 import AddPatientEntryModal from "../AddPatientEntryModal";
-import { EntryFormValues } from "../AddPatientEntryModal/AddPatientEntryForm";
+import { HealthCheckEntryFormValues } from "../AddPatientEntryModal/AddHealthCheckEntryForm";
+import { HospitalEntryFormValues } from "../AddPatientEntryModal/AddHospitalEntryForm";
+import { OccupationHealthEntryFormValues } from "../AddPatientEntryModal/AddOccupationEntryForm";
+import { EntryTypeField } from "../AddPatientModal/FormField";
 
 const renderGenderIcon = (gender: string) => {
   if (gender === "male") {
@@ -37,9 +40,15 @@ const PatientInfo: React.FC = () => {
   );
 
   /**TODO */
-  const submitNewPatient = async (values: EntryFormValues) => {
+  const submitNewPatient = async (
+    values:
+      | HealthCheckEntryFormValues
+      | HospitalEntryFormValues
+      | OccupationHealthEntryFormValues
+  ) => {
     try {
       if (patient) {
+        console.log(`all values in patientinfo`, values);
         const { data: updatedPatient } = await axios.post<Patient>(
           `${apiBaseUrl}/patients/${patient.id}/entries`,
           values
@@ -104,6 +113,7 @@ const PatientInfo: React.FC = () => {
               error={error}
               onClose={closeModal}
             />
+            {/**open modal -> select entry type -> render form based on entry type selected*/}
             <Button onClick={() => openModal()}>Add New Entry</Button>
           </div>
         </div>

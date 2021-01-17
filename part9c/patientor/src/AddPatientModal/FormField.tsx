@@ -19,12 +19,12 @@ type SelectFieldProps = {
 export const SelectField: React.FC<SelectFieldProps> = ({
   name,
   label,
-  options
+  options,
 }: SelectFieldProps) => (
   <Form.Field>
     <label>{label}</label>
     <Field as="select" name={name} className="ui dropdown">
-      {options.map(option => (
+      {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label || option.value}
         </option>
@@ -41,12 +41,12 @@ interface TextProps extends FieldProps {
 export const TextField: React.FC<TextProps> = ({
   field,
   label,
-  placeholder
+  placeholder,
 }) => (
   <Form.Field>
     <label>{label}</label>
     <Field placeholder={placeholder} {...field} />
-    <div style={{ color:'red' }}>
+    <div style={{ color: "red" }}>
       <ErrorMessage name={field.name} />
     </div>
   </Form.Field>
@@ -62,21 +62,67 @@ interface NumberProps extends FieldProps {
   max: number;
 }
 
-export const NumberField: React.FC<NumberProps> = ({ field, label, min, max }) => (
+export const NumberField: React.FC<NumberProps> = ({
+  field,
+  label,
+  min,
+  max,
+}) => (
   <Form.Field>
     <label>{label}</label>
-    <Field {...field} type='number' min={min} max={max} />
+    <Field {...field} type="number" min={min} max={max} />
 
-    <div style={{ color:'red' }}>
+    <div style={{ color: "red" }}>
       <ErrorMessage name={field.name} />
     </div>
   </Form.Field>
 );
 
+export const EntryTypeField = ({
+  setEntryType,
+  entryType,
+}: {
+  setEntryType: (selection: string) => void;
+  entryType: string;
+}) => {
+  const onChange = (
+    _event: React.SyntheticEvent<HTMLElement, Event>,
+    data: DropdownProps
+  ) => {
+    setEntryType(data.value as string);
+  };
+
+  const stateOptions = [
+    "HealthCheck",
+    "Hospital",
+    "OccupationalHealthcare",
+  ].map((entry) => {
+    return {
+      key: entry,
+      text: entry,
+      value: entry,
+    };
+  });
+
+  return (
+    <Form.Field>
+      <label>Entry Type</label>
+      <Dropdown
+        fluid
+        search
+        selection
+        options={stateOptions}
+        defaultValue="HealthCheck"
+        onChange={onChange}
+      />
+    </Form.Field>
+  );
+};
+
 export const DiagnosisSelection = ({
   diagnoses,
   setFieldValue,
-  setFieldTouched
+  setFieldTouched,
 }: {
   diagnoses: Diagnosis[];
   setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
@@ -89,13 +135,16 @@ export const DiagnosisSelection = ({
   ) => {
     setFieldTouched(field, true);
     setFieldValue(field, data.value);
+    console.log("data from dropdown", data);
   };
 
-  const stateOptions = diagnoses.map(diagnosis => ({
-    key: diagnosis.code,
-    text: `${diagnosis.name} (${diagnosis.code})`,
-    value: diagnosis.code
-  }));
+  const stateOptions = diagnoses.map((diagnosis) => {
+    return {
+      key: diagnosis.code,
+      text: `${diagnosis.name} (${diagnosis.code})`,
+      value: diagnosis.code,
+    };
+  });
 
   return (
     <Form.Field>
@@ -108,6 +157,7 @@ export const DiagnosisSelection = ({
         options={stateOptions}
         onChange={onChange}
       />
+
       <ErrorMessage name={field} />
     </Form.Field>
   );

@@ -2,25 +2,28 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 import { Entry, OccupationalHealthcareEntry } from "../types";
-import { TextField } from "../AddPatientModal/FormField";
+import { useStateValue } from "../state";
+import { TextField, DiagnosisSelection } from "../AddPatientModal/FormField";
 /*
  * use type Patient, but omit id and entries,
  * because those are irrelevant for new patient object.
  */
-export type EntryFormValues = Omit<
+export type OccupationHealthEntryFormValues = Omit<
   OccupationalHealthcareEntry,
   "id" | "entries"
 >;
 
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: OccupationHealthEntryFormValues) => void;
   onCancel: () => void;
 }
 
-export const AddPatientEntryForm: React.FC<Props> = ({
+export const AddOccupationEntryForm: React.FC<Props> = ({
   onSubmit,
   onCancel,
 }) => {
+  const [{ diagnoses }] = useStateValue();
+  console.log(`diagnoses:`, diagnoses);
   return (
     <Formik
       initialValues={{
@@ -29,14 +32,18 @@ export const AddPatientEntryForm: React.FC<Props> = ({
         specialist: "",
         description: "",
         employerName: "",
+        sickLeave: { startDate: "", endDate: "" },
       }}
       onSubmit={onSubmit}
       validate={(values) => {
+        console.log(`all values`, values);
         const requiredError = "Field is required";
+
         const errors: { [field: string]: string } = {};
         if (!values.date) {
           errors.date = requiredError;
         }
+
         if (!values.type) {
           errors.type = requiredError;
         }
@@ -52,7 +59,7 @@ export const AddPatientEntryForm: React.FC<Props> = ({
         return errors;
       }}
     >
-      {({ isValid, dirty }) => {
+      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -61,12 +68,7 @@ export const AddPatientEntryForm: React.FC<Props> = ({
               name="date"
               component={TextField}
             />
-            <Field
-              label="Entry Type"
-              placeholder="type"
-              name="type"
-              component={TextField}
-            />
+
             <Field
               label="Specialist"
               placeholder="Specialist"
@@ -85,6 +87,25 @@ export const AddPatientEntryForm: React.FC<Props> = ({
               placeholder="Employer Name"
               name="employerName"
               component={TextField}
+            />
+
+            <Field
+              label="Sick Leave Start Date"
+              placeholder="Sick Leave Start Date"
+              name="sickLeave.startDate"
+              component={TextField}
+            />
+
+            <Field
+              label="Sick Leave End Date"
+              placeholder="Sick Leave End Date"
+              name="sickLeave.endDate"
+              component={TextField}
+            />
+            <DiagnosisSelection
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              diagnoses={Object.values(diagnoses)}
             />
             <Grid>
               <Grid.Column floated="left" width={5}>
@@ -110,4 +131,4 @@ export const AddPatientEntryForm: React.FC<Props> = ({
   );
 };
 
-export default AddPatientEntryForm;
+export default AddOccupationEntryForm;
